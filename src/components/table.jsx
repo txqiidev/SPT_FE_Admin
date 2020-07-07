@@ -7,21 +7,21 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import CheckIcon from "@material-ui/icons/Check";
+import CloseIcon from "@material-ui/icons/Close";
 import Button from "./button";
 
-const createData = (name, url, dependencies) => {
-  return { name, url, dependencies };
-};
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Frozen yoghurt", 159, 6.0),
-];
-
-const SimpleTable = () => {
+const SimpleTable = (props) => {
   const classes = useStyles();
+  const { modules } = props;
+
+  const getIcon = (value) => {
+    if (value === "NULL" || value === 0) {
+      return <CloseIcon style={{ color: "#ff0000" }} />;
+    } else {
+      return <CheckIcon style={{ color: "#00ff00" }} />;
+    }
+  };
 
   return (
     <TableContainer component={Paper}>
@@ -29,25 +29,27 @@ const SimpleTable = () => {
         <TableHead>
           <TableRow>
             <TableCell className={classes.fontWeight}>Name</TableCell>
-            <TableCell className={classes.fontWeight} align="right">
+            <TableCell className={classes.fontWeight} align="center">
               URL
             </TableCell>
-            <TableCell className={classes.fontWeight} align="right">
+            <TableCell className={classes.fontWeight} align="center">
               Dependencies
             </TableCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.name}>
+          {modules.map((modules) => (
+            <TableRow key={modules.Name}>
               <TableCell component="th" scope="row">
-                {row.name}
+                {modules.Name}
               </TableCell>
-              <TableCell align="right">{row.url}</TableCell>
-              <TableCell align="right">{row.dependencies}</TableCell>
+              <TableCell align="center">{getIcon(modules.URL)}</TableCell>
+              <TableCell align="center">
+                {getIcon(modules.HasPrerequisite)}
+              </TableCell>
               <TableCell align="right">
-                <Button variant="contained" color="Primary" label={"EDIT"}>
+                <Button variant="contained" color="primary" label={"EDIT"}>
                   EDIT
                 </Button>
               </TableCell>

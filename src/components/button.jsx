@@ -6,7 +6,7 @@ const CustomButton = (props) => {
   const classes = useStyles();
 
   return (
-    <Button className={classes.button} variant="contained" color="Primary">
+    <Button className={classes.button} variant="contained" color="primary">
       {props.label}
     </Button>
   );
