@@ -2,15 +2,18 @@ import React, { useState, useEffect } from "react";
 import Table from "../components/table";
 import ButtonGroup from "../components/buttonGroup";
 import DropDown from "../components/dropdown";
+import DialogBox from "../components/dialog";
 import http from "../services/http";
 import config from "../config.json";
 
 const Home = () => {
   const [modules, setModules] = useState([]);
+  const [currentModule, setCurrentModule] = useState({});
   const [filteredModules, setFilteredModules] = useState([]);
   const [isAll, setIsAll] = useState(true);
   const [studyProgrammes, setStudyProgrammes] = useState([]);
   const [selectedStudyProgramme, setSelectedStudyProgramme] = useState("");
+  const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
     getModules();
@@ -54,8 +57,19 @@ const Home = () => {
             studyProgramme={selectedStudyProgramme}
           />
         </div>
-        <Table modules={isAll ? modules : filteredModules}></Table>
+        <Table
+          modules={isAll ? modules : filteredModules}
+          onClick={(module) => {
+            setOpen(true);
+            setCurrentModule(module);
+          }}
+        ></Table>
       </div>
+      <DialogBox
+        open={open}
+        onClose={() => setOpen(false)}
+        module={currentModule}
+      />
     </div>
   );
 };

@@ -6,7 +6,12 @@ const CustomButton = (props) => {
   const classes = useStyles();
 
   return (
-    <Button className={classes.button} variant="contained" color="primary">
+    <Button
+      className={classes.button}
+      variant="contained"
+      color={props.color}
+      onClick={(value) => props.onClick(value)}
+    >
       {props.label}
     </Button>
   );

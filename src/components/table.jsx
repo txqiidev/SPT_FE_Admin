@@ -49,7 +49,12 @@ const SimpleTable = (props) => {
                 {getIcon(modules.HasPrerequisite)}
               </TableCell>
               <TableCell align="right">
-                <Button variant="contained" color="primary" label={"EDIT"}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  label={"EDIT"}
+                  onClick={() => props.onClick(modules)}
+                >
                   EDIT
                 </Button>
               </TableCell>
