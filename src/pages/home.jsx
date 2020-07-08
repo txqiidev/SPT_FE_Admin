@@ -52,9 +52,10 @@ const Home = () => {
             isAll={isAll}
           ></ButtonGroup>
           <DropDown
-            menuItems={studyProgrammes}
+            menuItems={studyProgrammes.map((s) => s.Name)}
             onChange={(value) => setSelectedStudyProgramme(value)}
-            studyProgramme={selectedStudyProgramme}
+            selected={selectedStudyProgramme}
+            label="Studyprogramme"
           />
         </div>
         <Table
@@ -69,6 +70,8 @@ const Home = () => {
         open={open}
         onClose={() => setOpen(false)}
         module={currentModule}
+        menuItems={modules.map((m) => m.Name)}
+        color="secondary"
       />
     </div>
   );

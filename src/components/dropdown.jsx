@@ -11,22 +11,19 @@ const Dropdown = (props) => {
   return (
     <div>
       <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Studyprogramme</InputLabel>
+        <InputLabel id="demo-simple-select-label">{props.label}</InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={props.studyProgramme}
+          value={props.selected}
           onChange={(event) => props.onChange(event.target.value)}
         >
           <MenuItem value={0}>
             <em>All</em>
           </MenuItem>
           {props.menuItems.map((menuItem) => (
-            <MenuItem
-              key={menuItem.idStudyProgramme}
-              value={menuItem.idStudyProgramme}
-            >
-              {menuItem.Name}
+            <MenuItem key={menuItem} value={menuItem}>
+              {menuItem}
             </MenuItem>
           ))}
         </Select>
@@ -40,6 +37,6 @@ export default Dropdown;
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 200,
+    minWidth: 350,
   },
 }));
