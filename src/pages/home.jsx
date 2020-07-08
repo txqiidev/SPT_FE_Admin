@@ -21,6 +21,7 @@ const Home = () => {
   }, []);
 
   const getModules = async () => {
+    console.log("called");
     try {
       const { data: modules } = await http.get(config.apiEndpoint + "modules");
       setModules(modules);
@@ -52,10 +53,13 @@ const Home = () => {
             isAll={isAll}
           ></ButtonGroup>
           <DropDown
-            menuItems={studyProgrammes.map((s) => s.Name)}
+            menuItems={studyProgrammes.map(({ idStudyProgramme, Name }) => ({
+              id: idStudyProgramme,
+              name: Name,
+            }))}
             onChange={(value) => setSelectedStudyProgramme(value)}
             selected={selectedStudyProgramme}
-            label="Studyprogramme"
+            label={"Studyprogramme"}
           />
         </div>
         <Table
@@ -68,10 +72,16 @@ const Home = () => {
       </div>
       <DialogBox
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          getModules();
+        }}
         module={currentModule}
-        menuItems={modules.map((m) => m.Name)}
-        color="secondary"
+        hasPrerequisite={currentModule.HasPrerequisite === 0 ? true : false}
+        menuItems={modules.map(({ idModule, Name }) => ({
+          id: idModule,
+          name: Name,
+        }))}
       />
     </div>
   );

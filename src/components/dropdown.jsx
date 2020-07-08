@@ -22,8 +22,8 @@ const Dropdown = (props) => {
             <em>All</em>
           </MenuItem>
           {props.menuItems.map((menuItem) => (
-            <MenuItem key={menuItem} value={menuItem}>
-              {menuItem}
+            <MenuItem key={menuItem.id} value={menuItem.id}>
+              {menuItem.name}
             </MenuItem>
           ))}
         </Select>
