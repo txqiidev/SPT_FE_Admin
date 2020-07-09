@@ -46,10 +46,13 @@ const DialogBox = (props) => {
 
   const updateURL = async () => {
     try {
-      const response = await http.put(config.apiEndpoint + "modules/URL", {
-        id: module.idModule,
-        url: url,
-      });
+      const response = await http.put(
+        config.apiEndpoint + "admin/modules/URL",
+        {
+          id: module.idModule,
+          url: url,
+        }
+      );
       console.log(response);
     } catch (error) {
       console.error(error);
@@ -59,7 +62,7 @@ const DialogBox = (props) => {
   const updateHasPrerequisite = async (num) => {
     try {
       const response = await http.put(
-        config.apiEndpoint + "modules/HasPrerequisite",
+        config.apiEndpoint + "admin/modules/HasPrerequisite",
         {
           id: module.idModule,
           hasPrerequisite: num,
@@ -74,7 +77,7 @@ const DialogBox = (props) => {
   const insertPrerequisite = async () => {
     try {
       const response = await http.post(
-        config.apiEndpoint + "modules/Prerequisite",
+        config.apiEndpoint + "admin/modules/Prerequisite",
         {
           id: module.idModule,
           idPrerequisite: selectedModule,

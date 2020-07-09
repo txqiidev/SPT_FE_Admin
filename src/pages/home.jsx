@@ -5,6 +5,7 @@ import DropDown from "../components/dropdown";
 import DialogBox from "../components/dialog";
 import http from "../services/http";
 import config from "../config.json";
+import auth from "../services/auth";
 
 const Home = () => {
   const [modules, setModules] = useState([]);
@@ -23,7 +24,9 @@ const Home = () => {
   const getModules = async () => {
     console.log("called");
     try {
-      const { data: modules } = await http.get(config.apiEndpoint + "modules");
+      const { data: modules } = await http.get(
+        config.apiEndpoint + "admin/modules"
+      );
       setModules(modules);
       setFilteredModules(
         modules.filter((m) => m.URL === "NULL" || m.HasPrerequisite === 0)
@@ -36,7 +39,7 @@ const Home = () => {
   const getStudyProgramme = async () => {
     try {
       const { data: studyprogrammes } = await http.get(
-        config.apiEndpoint + "studyprogramme"
+        config.apiEndpoint + "admin/studyprogramme"
       );
       setStudyProgrammes(studyprogrammes);
     } catch (error) {
@@ -44,8 +47,14 @@ const Home = () => {
     }
   };
 
+  const doLogOut = () => {
+    auth.logout();
+    window.location = "/login";
+  };
+
   return (
     <div style={styles.root}>
+      <p onClick={() => doLogOut()}>LOGOUT</p>
       <div style={styles.container}>
         <div style={styles.header}>
           <ButtonGroup
