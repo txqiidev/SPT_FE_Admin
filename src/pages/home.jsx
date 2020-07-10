@@ -6,6 +6,7 @@ import DialogBox from "../components/dialog";
 import http from "../services/http";
 import config from "../config.json";
 import auth from "../services/auth";
+import calling from "../services/getData";
 
 const Home = () => {
   const [modules, setModules] = useState([]);
@@ -17,35 +18,19 @@ const Home = () => {
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
-    getModules();
-    getStudyProgramme();
+    calling.getStudyProgramme().then((result) => setStudyProgrammes(result));
   }, []);
 
-  const getModules = async () => {
-    console.log("called");
-    try {
-      const { data: modules } = await http.get(
-        config.apiEndpoint + "admin/modules"
-      );
-      setModules(modules);
-      setFilteredModules(
-        modules.filter((m) => m.URL === "NULL" || m.HasPrerequisite === 0)
-      );
-    } catch (error) {
-      console.error(error);
+  useEffect(() => {
+    if (!open) {
+      calling.getModules().then((result) => {
+        setModules(result);
+        setFilteredModules(
+          result.filter((m) => m.URL === "NULL" || m.HasPrerequisite === 0)
+        );
+      });
     }
-  };
-
-  const getStudyProgramme = async () => {
-    try {
-      const { data: studyprogrammes } = await http.get(
-        config.apiEndpoint + "admin/studyprogramme"
-      );
-      setStudyProgrammes(studyprogrammes);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  }, [open]);
 
   const doLogOut = () => {
     auth.logout();
@@ -83,7 +68,6 @@ const Home = () => {
         open={open}
         onClose={() => {
           setOpen(false);
-          getModules();
         }}
         module={currentModule}
         hasPrerequisite={currentModule.HasPrerequisite === 0 ? true : false}

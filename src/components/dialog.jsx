@@ -11,86 +11,43 @@ import CustomButton from "../components/button";
 import DropDown from "../components/dropdown";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
-import http from "../services/http";
-import config from "../config.json";
+import modification from "../services/modifications";
+import calling from "../services/getData";
 
 const DialogBox = (props) => {
-  const { module } = props;
+  const { module: dialogModule, open } = props;
+  const [module, setModule] = useState({});
   const [url, setURL] = useState("");
   const [selectedModule, setSelectedModule] = useState("");
   const [checked, setChecked] = useState();
+  const [prerequisites, setPrerequisites] = useState([]);
+  const [response, setResponse] = useState({});
 
   const classes = useStyles();
 
   useEffect(() => {
-    setChecked(module.HasPrerequisite === 0 ? false : true);
-  }, [module]);
+    if (open) {
+      console.log(open);
+      updateModule(dialogModule.idModule);
+      setChecked(dialogModule.HasPrerequisite === 0 ? false : true);
+      modification
+        .getPrerequisites(dialogModule.idModule)
+        .then((result) => setPrerequisites(result));
+    }
+  }, [dialogModule, open]);
 
-  const onClickHandlerURL = () => {
-    updateURL();
-  };
-
-  const onClickHandlerPrerequisite = () => {
-    insertPrerequisite();
+  const updateModule = (id) => {
+    calling.getModule(id).then((result) => setModule(result));
   };
 
   const onChangeHandlerCheck = async () => {
-    console.log(checked);
-    if (!checked === true) {
-      updateHasPrerequisite(2);
-    } else {
-      updateHasPrerequisite(0);
-    }
-    setChecked(!checked);
-  };
-
-  const updateURL = async () => {
-    try {
-      const response = await http.put(
-        config.apiEndpoint + "admin/modules/URL",
-        {
-          id: module.idModule,
-          url: url,
-        }
-      );
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const updateHasPrerequisite = async (num) => {
-    try {
-      const response = await http.put(
-        config.apiEndpoint + "admin/modules/HasPrerequisite",
-        {
-          id: module.idModule,
-          hasPrerequisite: num,
-        }
-      );
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const insertPrerequisite = async () => {
-    try {
-      const response = await http.post(
-        config.apiEndpoint + "admin/modules/Prerequisite",
-        {
-          id: module.idModule,
-          idPrerequisite: selectedModule,
-        }
-      );
-      console.log(module.idModule, selectedModule);
-      console.log(response);
-      if (module.HasPrerequisite === 0) {
-        updateHasPrerequisite(1);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    modification
+      .updateHasPrerequisite(module.idModule, !checked ? 2 : 0)
+      .then((result) => {
+        setResponse(result);
+        setChecked(!checked);
+        updateModule(dialogModule.idModule);
+      });
   };
 
   return (
@@ -121,30 +78,66 @@ const DialogBox = (props) => {
             variant="contained"
             color="primary"
             label={module.URL !== "NULL" ? "CHANGE" : "ADD"}
-            onClick={() => onClickHandlerURL()}
+            onClick={() =>
+              modification
+                .updateURL(module.idModule, url)
+                .then((result) => setResponse(result))
+            }
           />
         </div>
         <DialogContentText>Prerequisite Module(s)</DialogContentText>
         {module.HasPrerequisite !== 1 && (
           <DialogContentText className={classes.italic}>None</DialogContentText>
         )}
-        <div className={classes.form}>
-          <DropDown
-            menuItems={props.menuItems}
-            onChange={(value) => {
-              setSelectedModule(value);
-              console.log(value);
-            }}
-            selected={selectedModule}
-            label={"Modules"}
-          />
-          <CustomButton
-            variant="contained"
-            color="primary"
-            label={"ADD"}
-            onClick={() => onClickHandlerPrerequisite()}
-          />
-        </div>
+        {prerequisites.map((prereq) => (
+          <div key={prereq.idModule} className={classes.form}>
+            <DialogContentText>{prereq.Name}</DialogContentText>
+            <CustomButton
+              variant="contained"
+              color="primary"
+              label={"DELETE"}
+              onClick={() =>
+                modification
+                  .deletePrerequisite(module, prereq.idModule, prerequisites)
+                  .then((result) => {
+                    setPrerequisites(result);
+                    updateModule(dialogModule.idModule);
+                  })
+              }
+            />
+          </div>
+        ))}
+        {module.HasPrerequisite !== 2 && (
+          <div className={classes.form}>
+            <DropDown
+              menuItems={props.menuItems}
+              onChange={(value, name) => {
+                setSelectedModule(value);
+                console.log(name);
+              }}
+              selected={selectedModule}
+              label={"Modules"}
+            />
+            <CustomButton
+              variant="contained"
+              color="primary"
+              label={"ADD"}
+              onClick={() =>
+                modification
+                  .insertPrerequisite(module, selectedModule)
+                  .then((result) => {
+                    setResponse(result);
+                    modification
+                      .getPrerequisites(module.idModule)
+                      .then((result) => {
+                        setPrerequisites(result);
+                        updateModule(dialogModule.idModule);
+                      });
+                  })
+              }
+            />
+          </div>
+        )}
         {module.HasPrerequisite !== 1 && (
           <FormControlLabel
             control={
