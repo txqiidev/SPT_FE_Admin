@@ -3,10 +3,10 @@ import Table from "../components/table";
 import ButtonGroup from "../components/buttonGroup";
 import DropDown from "../components/dropdown";
 import DialogBox from "../components/dialog";
-import http from "../services/http";
-import config from "../config.json";
 import auth from "../services/auth";
 import calling from "../services/getData";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Button from "@material-ui/core/Button";
 
 const Home = () => {
   const [modules, setModules] = useState([]);
@@ -16,6 +16,7 @@ const Home = () => {
   const [studyProgrammes, setStudyProgrammes] = useState([]);
   const [selectedStudyProgramme, setSelectedStudyProgramme] = useState("");
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
 
   useEffect(() => {
     calling.getStudyProgramme().then((result) => setStudyProgrammes(result));
@@ -28,6 +29,7 @@ const Home = () => {
         setFilteredModules(
           result.filter((m) => m.URL === "NULL" || m.HasPrerequisite === 0)
         );
+        setLoading(false);
       });
     }
   }, [open]);
@@ -39,7 +41,11 @@ const Home = () => {
 
   return (
     <div style={styles.root}>
-      <p onClick={() => doLogOut()}>LOGOUT</p>
+      <div style={styles.logoutDiv}>
+        <Button onClick={() => doLogOut()} style={styles.logout}>
+          LOGOUT
+        </Button>
+      </div>
       <div style={styles.container}>
         <div style={styles.header}>
           <ButtonGroup
@@ -54,15 +60,22 @@ const Home = () => {
             onChange={(value) => setSelectedStudyProgramme(value)}
             selected={selectedStudyProgramme}
             label={"Studyprogramme"}
+            showAll={true}
           />
         </div>
-        <Table
-          modules={isAll ? modules : filteredModules}
-          onClick={(module) => {
-            setOpen(true);
-            setCurrentModule(module);
-          }}
-        ></Table>
+        {!loading ? (
+          <Table
+            modules={isAll ? modules : filteredModules}
+            onClick={(module) => {
+              setOpen(true);
+              setCurrentModule(module);
+            }}
+          ></Table>
+        ) : (
+          <div style={styles.progress}>
+            <CircularProgress color="secondary" />
+          </div>
+        )}
       </div>
       <DialogBox
         open={open}
@@ -101,5 +114,23 @@ const styles = {
     alignItems: "center",
     marginTop: 20,
     marginBottom: 20,
+  },
+  progress: {
+    display: "flex",
+    width: "100%",
+    height: "70vh",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  logout: {
+    fontWeight: 600,
+    marginTop: 5,
+    marginBottom: 5,
+    color: "#313639",
+  },
+  logoutDiv: {
+    display: "flex",
+    width: "100%",
+    justifyContent: "flex-end",
   },
 };

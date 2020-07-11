@@ -14,14 +14,15 @@ const getPrerequisites = async (id) => {
 
 const updateURL = async (id, url) => {
   try {
-    const response = await http.put(config.apiEndpoint + "admin/modules/URL", {
+    const response = await http.put(config.apiEndpoint + "admin/modules/URLs", {
       id: id,
       url: url,
     });
     console.log(response);
     return response;
   } catch (error) {
-    console.error(error);
+    console.log("1", error.response.data);
+    return Promise.reject(error.response.data);
   }
 };
 
@@ -71,6 +72,7 @@ const deletePrerequisite = async (module, prereqId, prerequisites) => {
         },
       }
     );
+    console.log(response);
     const newArray = prerequisites.filter((pre) => {
       return pre.idModule !== prereqId;
     });

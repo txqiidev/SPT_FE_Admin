@@ -13,6 +13,7 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import modification from "../services/modifications";
 import calling from "../services/getData";
+import Alert from "./alert";
 
 const DialogBox = (props) => {
   const { module: dialogModule, open } = props;
@@ -20,16 +21,19 @@ const DialogBox = (props) => {
   const [url, setURL] = useState("");
   const [selectedModule, setSelectedModule] = useState("");
   const [checked, setChecked] = useState();
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
   const [prerequisites, setPrerequisites] = useState([]);
-  const [response, setResponse] = useState({});
 
   const classes = useStyles();
 
   useEffect(() => {
     if (open) {
-      console.log(open);
       updateModule(dialogModule.idModule);
-      setChecked(dialogModule.HasPrerequisite === 0 ? false : true);
+      setChecked(dialogModule.HasPrerequisite !== 0 ? true : false);
       modification
         .getPrerequisites(dialogModule.idModule)
         .then((result) => setPrerequisites(result));
@@ -44,10 +48,16 @@ const DialogBox = (props) => {
     modification
       .updateHasPrerequisite(module.idModule, !checked ? 2 : 0)
       .then((result) => {
-        setResponse(result);
         setChecked(!checked);
         updateModule(dialogModule.idModule);
       });
+  };
+
+  const handleClose = (reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlert({ ...alert, open: false });
   };
 
   return (
@@ -58,7 +68,9 @@ const DialogBox = (props) => {
     >
       <DialogTitle id="form-dialog-title">{module.Name}</DialogTitle>
       <DialogContent>
-        <DialogContentText>URL of Module Description</DialogContentText>
+        <DialogContentText className={classes.titel}>
+          URL of Module Description
+        </DialogContentText>
         {module.URL === "NULL" && (
           <DialogContentText className={classes.italic}>None</DialogContentText>
         )}
@@ -68,7 +80,7 @@ const DialogBox = (props) => {
             margin="dense"
             id="url"
             label="URL"
-            defaultValue={module.URL !== "NULL" ? module.URL : ""}
+            defaultValue={dialogModule.URL !== "NULL" ? dialogModule.URL : ""}
             fullWidth
             variant="outlined"
             color="secondary"
@@ -81,16 +93,35 @@ const DialogBox = (props) => {
             onClick={() =>
               modification
                 .updateURL(module.idModule, url)
-                .then((result) => setResponse(result))
+                .then(() =>
+                  setAlert({
+                    open: true,
+                    message: "URL successfully updated!",
+                    severity: "success",
+                  })
+                )
+                .catch((e) =>
+                  setAlert({
+                    open: true,
+                    message: e,
+                    severity: "error",
+                  })
+                )
             }
           />
         </div>
-        <DialogContentText>Prerequisite Module(s)</DialogContentText>
+        <DialogContentText className={classes.titel} style={{ marginTop: 50 }}>
+          Prerequisite Module(s)
+        </DialogContentText>
         {module.HasPrerequisite !== 1 && (
           <DialogContentText className={classes.italic}>None</DialogContentText>
         )}
         {prerequisites.map((prereq) => (
-          <div key={prereq.idModule} className={classes.form}>
+          <div
+            key={prereq.idModule}
+            className={classes.form}
+            style={{ marginTop: 5, marginBottom: 5 }}
+          >
             <DialogContentText>{prereq.Name}</DialogContentText>
             <CustomButton
               variant="contained"
@@ -102,6 +133,11 @@ const DialogBox = (props) => {
                   .then((result) => {
                     setPrerequisites(result);
                     updateModule(dialogModule.idModule);
+                    setAlert({
+                      open: true,
+                      message: `${prereq.Name} successfully deleted!`,
+                      severity: "success",
+                    });
                   })
               }
             />
@@ -111,9 +147,8 @@ const DialogBox = (props) => {
           <div className={classes.form}>
             <DropDown
               menuItems={props.menuItems}
-              onChange={(value, name) => {
+              onChange={(value) => {
                 setSelectedModule(value);
-                console.log(name);
               }}
               selected={selectedModule}
               label={"Modules"}
@@ -126,12 +161,19 @@ const DialogBox = (props) => {
                 modification
                   .insertPrerequisite(module, selectedModule)
                   .then((result) => {
-                    setResponse(result);
                     modification
                       .getPrerequisites(module.idModule)
                       .then((result) => {
                         setPrerequisites(result);
                         updateModule(dialogModule.idModule);
+                        setAlert({
+                          open: true,
+                          message: `${
+                            result.find((m) => (m.idMoule = selectedModule))
+                              .Name
+                          } successfully added!`,
+                          severity: "success",
+                        });
                       });
                   })
               }
@@ -152,13 +194,20 @@ const DialogBox = (props) => {
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={props.onClose} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={props.onClose} color="primary">
-          Subscribe
+        <Button
+          onClick={props.onClose}
+          color="secondary"
+          className={classes.exit}
+        >
+          DONE
         </Button>
       </DialogActions>
+      <Alert
+        open={alert.open}
+        message={alert.message}
+        severity={alert.severity}
+        onClick={(reason) => handleClose(reason)}
+      ></Alert>
     </Dialog>
   );
 };
@@ -181,7 +230,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
   },
   titel: {
-    fontSize: 18,
     fontWeight: 600,
+  },
+  exit: {
+    fontWeight: 600,
+    marginTop: 15,
+    marginBottom: 5,
+    color: "black",
   },
 }));

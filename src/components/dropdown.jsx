@@ -9,26 +9,27 @@ const Dropdown = (props) => {
   const classes = useStyles();
 
   return (
-    <div>
-      <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">{props.label}</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={props.selected}
-          onChange={(event) => props.onChange(event.target.value)}
-        >
+    <FormControl className={classes.formControl}>
+      <InputLabel id="simple-select-label">{props.label}</InputLabel>
+      <Select
+        labelId="simple-select-label"
+        id="simple-select"
+        value={props.selected}
+        onChange={(event) => props.onChange(event.target.value)}
+        label={props.label}
+      >
+        {props.showAll && (
           <MenuItem value={0}>
             <em>All</em>
           </MenuItem>
-          {props.menuItems.map((menuItem) => (
-            <MenuItem key={menuItem.id} value={menuItem.id}>
-              {menuItem.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </div>
+        )}
+        {props.menuItems.map((menuItem) => (
+          <MenuItem key={menuItem.id} value={menuItem.id}>
+            {menuItem.name}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };
 
