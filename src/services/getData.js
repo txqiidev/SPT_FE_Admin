@@ -26,7 +26,7 @@ const getModules = async () => {
 const getStudyProgramme = async () => {
   try {
     const { data: studyprogrammes } = await http.get(
-      config.apiEndpoint + "admin/studyprogramme"
+      config.apiEndpoint + "studyprogramme"
     );
     return studyprogrammes;
   } catch (error) {
