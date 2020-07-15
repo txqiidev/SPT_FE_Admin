@@ -33,7 +33,7 @@ const DialogBox = (props) => {
   useEffect(() => {
     if (open) {
       updateModule(dialogModule.idModule);
-      setChecked(dialogModule.HasPrerequisite !== 0 ? true : false);
+      setChecked(dialogModule.HasPrerequisite === 2 ? true : false);
       modification
         .getPrerequisites(dialogModule.idModule)
         .then((result) => setPrerequisites(result));
