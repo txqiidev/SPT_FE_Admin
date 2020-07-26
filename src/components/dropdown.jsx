@@ -19,7 +19,7 @@ const Dropdown = (props) => {
         label={props.label}
       >
         {props.showAll && (
-          <MenuItem value={0}>
+          <MenuItem value={"All"}>
             <em>All</em>
           </MenuItem>
         )}

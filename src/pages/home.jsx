@@ -14,7 +14,7 @@ const Home = () => {
   const [filteredModules, setFilteredModules] = useState([]);
   const [isAll, setIsAll] = useState(true);
   const [studyProgrammes, setStudyProgrammes] = useState([]);
-  const [selectedStudyProgramme, setSelectedStudyProgramme] = useState("");
+  const [selectedStudyProgramme, setSelectedStudyProgramme] = useState("All");
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
 
@@ -24,7 +24,7 @@ const Home = () => {
 
   useEffect(() => {
     if (!open) {
-      calling.getModules().then((result) => {
+      calling.getModules(selectedStudyProgramme).then((result) => {
         setModules(result);
         setFilteredModules(
           result.filter((m) => m.URL === "NULL" || m.HasPrerequisite === 0)
@@ -32,7 +32,7 @@ const Home = () => {
         setLoading(false);
       });
     }
-  }, [open]);
+  }, [open, selectedStudyProgramme]);
 
   const doLogOut = () => {
     auth.logout();

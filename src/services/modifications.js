@@ -14,7 +14,7 @@ const getPrerequisites = async (id) => {
 
 const updateURL = async (id, url) => {
   try {
-    const response = await http.put(config.apiEndpoint + "admin/modules/URLs", {
+    const response = await http.put(config.apiEndpoint + "admin/modules/URL", {
       id: id,
       url: url,
     });

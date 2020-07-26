@@ -12,10 +12,10 @@ const getModule = async (id) => {
   }
 };
 
-const getModules = async () => {
+const getModules = async (id) => {
   try {
     const { data: modules } = await http.get(
-      config.apiEndpoint + "admin/modules"
+      config.apiEndpoint + `admin/modules/all/${id}`
     );
     return modules;
   } catch (error) {
