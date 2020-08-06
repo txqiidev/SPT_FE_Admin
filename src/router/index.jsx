@@ -20,10 +20,6 @@ export default function Routing() {
           <Route path="/no-authorisation" component={NoAuthorisation} />
           <Route path="/not-found" component={NotFound} />
           <ProtectedRoute exact path="/" component={Home} />
-
-          {/* <Route path="*">
-            <NoMatch />
-          </Route> */}
           <Redirect to="/not-found" />
         </Switch>
       </div>

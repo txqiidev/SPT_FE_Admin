@@ -14,6 +14,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import modification from "../services/modifications";
 import calling from "../services/getData";
 import Alert from "./alert";
+import { withNamespaces } from "react-i18next";
 
 const DialogBox = (props) => {
   const { module: dialogModule, open } = props;
@@ -69,10 +70,12 @@ const DialogBox = (props) => {
       <DialogTitle id="form-dialog-title">{module.Name}</DialogTitle>
       <DialogContent>
         <DialogContentText className={classes.titel}>
-          URL of Module Description
+          {props.t("URLofMD")}
         </DialogContentText>
         {module.URL === "NULL" && (
-          <DialogContentText className={classes.italic}>None</DialogContentText>
+          <DialogContentText className={classes.italic}>
+            {props.t("None")}
+          </DialogContentText>
         )}
         <div className={classes.form}>
           <TextField
@@ -89,14 +92,14 @@ const DialogBox = (props) => {
           <CustomButton
             variant="contained"
             color="primary"
-            label={module.URL !== "NULL" ? "CHANGE" : "ADD"}
+            label={module.URL !== "NULL" ? props.t("Change") : props.t("Add")}
             onClick={() =>
               modification
                 .updateURL(module.idModule, url)
                 .then(() =>
                   setAlert({
                     open: true,
-                    message: "URL successfully updated!",
+                    message: `URL ${props.t("URLChangeMessage")}`,
                     severity: "success",
                   })
                 )
@@ -111,10 +114,12 @@ const DialogBox = (props) => {
           />
         </div>
         <DialogContentText className={classes.titel} style={{ marginTop: 50 }}>
-          Prerequisite Module(s)
+          {props.t("Prerequisite")}
         </DialogContentText>
         {module.HasPrerequisite !== 1 && (
-          <DialogContentText className={classes.italic}>None</DialogContentText>
+          <DialogContentText className={classes.italic}>
+            {props.t("None")}
+          </DialogContentText>
         )}
         {prerequisites.map((prereq) => (
           <div
@@ -126,7 +131,7 @@ const DialogBox = (props) => {
             <CustomButton
               variant="contained"
               color="primary"
-              label={"DELETE"}
+              label={props.t("Delete")}
               onClick={() =>
                 modification
                   .deletePrerequisite(module, prereq.idModule, prerequisites)
@@ -135,7 +140,7 @@ const DialogBox = (props) => {
                     updateModule(dialogModule.idModule);
                     setAlert({
                       open: true,
-                      message: `${prereq.Name} successfully deleted!`,
+                      message: `${prereq.Name} ${props.t("DeleteMessage")}`,
                       severity: "success",
                     });
                   })
@@ -151,12 +156,12 @@ const DialogBox = (props) => {
                 setSelectedModule(value);
               }}
               selected={selectedModule}
-              label={"Modules"}
+              label={props.t("Modules")}
             />
             <CustomButton
               variant="contained"
               color="primary"
-              label={"ADD"}
+              label={props.t("Add")}
               onClick={() =>
                 modification
                   .insertPrerequisite(module, selectedModule)
@@ -171,7 +176,7 @@ const DialogBox = (props) => {
                           message: `${
                             result.find((m) => (m.idMoule = selectedModule))
                               .Name
-                          } successfully added!`,
+                          } ${props.t("PreModuleAddMessage")}`,
                           severity: "success",
                         });
                       });
@@ -189,7 +194,7 @@ const DialogBox = (props) => {
                 name="checked"
               />
             }
-            label="Module has no prerequisite Module"
+            label={props.t("ModuleNoPreModule")}
           />
         )}
       </DialogContent>
@@ -199,7 +204,7 @@ const DialogBox = (props) => {
           color="secondary"
           className={classes.exit}
         >
-          DONE
+          {props.t("Done")}
         </Button>
       </DialogActions>
       <Alert
@@ -212,7 +217,7 @@ const DialogBox = (props) => {
   );
 };
 
-export default DialogBox;
+export default withNamespaces()(DialogBox);
 
 const useStyles = makeStyles((theme) => ({
   form: {

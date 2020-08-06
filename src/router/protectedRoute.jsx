@@ -10,7 +10,6 @@ const ProtectedRoute = ({ path, component: Component, render, ...rest }) => {
         if (!auth.getCurrentUser()) {
           return <Redirect to="/login" />;
         } else if (auth.getCurrentUser().isAdmin === 0) {
-          console.log(auth.getCurrentUser().isAdmin);
           return <Redirect to="/no-authorisation" />;
         }
         return Component ? <Component {...props} /> : render(props);

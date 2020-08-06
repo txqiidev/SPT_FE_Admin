@@ -7,8 +7,9 @@ import auth from "../services/auth";
 import calling from "../services/getData";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
+import { withNamespaces } from "react-i18next";
 
-const Home = () => {
+const Home = (props) => {
   const [modules, setModules] = useState([]);
   const [currentModule, setCurrentModule] = useState({});
   const [filteredModules, setFilteredModules] = useState([]);
@@ -39,11 +40,42 @@ const Home = () => {
     window.location = "/login";
   };
 
+  const changeLanguage = (lng) => {
+    localStorage.setItem("language", lng);
+    props.i18n.changeLanguage(lng);
+  };
+
   return (
     <div style={styles.root}>
-      <div style={styles.logoutDiv}>
+      <div style={styles.navBar}>
+        <div style={styles.language}>
+          <span
+            onClick={() => changeLanguage("en")}
+            style={{
+              ...styles.buttonsLanguage,
+              ...{
+                fontWeight:
+                  localStorage.getItem("language") !== "de" ? 600 : 300,
+              },
+            }}
+          >
+            EN
+          </span>
+          <span
+            onClick={() => changeLanguage("de")}
+            style={{
+              ...styles.buttonsLanguage,
+              ...{
+                fontWeight:
+                  localStorage.getItem("language") === "de" ? 600 : 300,
+              },
+            }}
+          >
+            DE
+          </span>
+        </div>{" "}
         <Button onClick={() => doLogOut()} style={styles.logout}>
-          LOGOUT
+          {props.t("Logout")}
         </Button>
       </div>
       <div style={styles.container}>
@@ -59,7 +91,7 @@ const Home = () => {
             }))}
             onChange={(value) => setSelectedStudyProgramme(value)}
             selected={selectedStudyProgramme}
-            label={"Studyprogramme"}
+            label={props.t("StudyProgramme")}
             showAll={true}
           />
         </div>
@@ -93,7 +125,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default withNamespaces()(Home);
 
 const styles = {
   root: {
@@ -128,9 +160,26 @@ const styles = {
     marginBottom: 5,
     color: "#313639",
   },
-  logoutDiv: {
+  navBar: {
     display: "flex",
     width: "100%",
-    justifyContent: "flex-end",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  language: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  buttonsLanguage: {
+    marginTop: 5,
+    marginBottom: 5,
+    color: "#313639",
+    cursor: "pointer",
+    marginLeft: 10,
+    fontSize: 16,
   },
 };

@@ -2,6 +2,7 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import { makeStyles } from "@material-ui/core/styles";
+import { withNamespaces } from "react-i18next";
 
 const BasicButtonGroup = (props) => {
   const classes = useStyles();
@@ -16,19 +17,19 @@ const BasicButtonGroup = (props) => {
         className={props.isAll ? classes.selected : classes.notSelected}
         onClick={() => props.onClick(true)}
       >
-        All
+        {props.t("All")}
       </Button>
       <Button
         className={!props.isAll ? classes.selected : classes.notSelected}
         onClick={() => props.onClick(false)}
       >
-        Incomplete
+        {props.t("Incomplete")}
       </Button>
     </ButtonGroup>
   );
 };
 
-export default BasicButtonGroup;
+export default withNamespaces()(BasicButtonGroup);
 
 const useStyles = makeStyles({
   selected: {

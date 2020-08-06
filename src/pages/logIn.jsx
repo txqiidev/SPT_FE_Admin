@@ -12,6 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import auth from "../services/auth";
+import { withNamespaces } from "react-i18next";
 
 const SignIn = (props) => {
   const [email, setEmail] = useState("");
@@ -27,7 +28,6 @@ const SignIn = (props) => {
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         setError(ex.response.data);
-        console.log(ex.response.data);
       }
     }
   };
@@ -40,7 +40,7 @@ const SignIn = (props) => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          {props.t("SignIn")}
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
@@ -50,7 +50,7 @@ const SignIn = (props) => {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label={props.t("EmailAddress")}
             name="email"
             autoComplete="email"
             autoFocus
@@ -65,7 +65,7 @@ const SignIn = (props) => {
             required
             fullWidth
             name="password"
-            label="Password"
+            label={props.t("Password")}
             type="password"
             id="password"
             autoComplete="current-password"
@@ -84,7 +84,7 @@ const SignIn = (props) => {
             className={classes.submit}
             onClick={() => doSubmit()}
           >
-            Sign In
+            {props.t("SignIn")}
           </Button>
           {/* <Grid container>
             <Grid item xs>
@@ -104,7 +104,7 @@ const SignIn = (props) => {
   );
 };
 
-export default SignIn;
+export default withNamespaces()(SignIn);
 
 const useStyles = makeStyles((theme) => ({
   paper: {

@@ -18,10 +18,8 @@ const updateURL = async (id, url) => {
       id: id,
       url: url,
     });
-    console.log(response);
     return response;
   } catch (error) {
-    console.log("1", error.response.data);
     return Promise.reject(error.response.data);
   }
 };
@@ -35,11 +33,8 @@ const updateHasPrerequisite = async (id, num) => {
         hasPrerequisite: num,
       }
     );
-    console.log(response);
     return response;
-  } catch (error) {
-    console.error(error);
-  }
+  } catch (error) {}
 };
 
 const insertPrerequisite = async (module, selectedModule) => {
@@ -51,7 +46,6 @@ const insertPrerequisite = async (module, selectedModule) => {
         idPrerequisite: selectedModule,
       }
     );
-    console.log(response);
     if (module.HasPrerequisite === 0) {
       updateHasPrerequisite(module.idModule, 1);
     }
@@ -63,16 +57,12 @@ const insertPrerequisite = async (module, selectedModule) => {
 
 const deletePrerequisite = async (module, prereqId, prerequisites) => {
   try {
-    const response = await http.delete(
-      config.apiEndpoint + "admin/modules/Prerequisite",
-      {
-        data: {
-          id: module.idModule,
-          idPrerequisite: prereqId,
-        },
-      }
-    );
-    console.log(response);
+    await http.delete(config.apiEndpoint + "admin/modules/Prerequisite", {
+      data: {
+        id: module.idModule,
+        idPrerequisite: prereqId,
+      },
+    });
     const newArray = prerequisites.filter((pre) => {
       return pre.idModule !== prereqId;
     });

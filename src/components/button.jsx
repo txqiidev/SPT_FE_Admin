@@ -21,7 +21,7 @@ export default CustomButton;
 
 const useStyles = makeStyles({
   button: {
-    width: 80,
+    minWidth: 100,
     fontWeight: 600,
     "&:hover": {
       backgroundColor: "#C7C7C7",

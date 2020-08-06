@@ -10,6 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
 import Button from "./button";
+import { withNamespaces } from "react-i18next";
 
 const SimpleTable = (props) => {
   const classes = useStyles();
@@ -33,7 +34,7 @@ const SimpleTable = (props) => {
               URL
             </TableCell>
             <TableCell className={classes.fontWeight} align="center">
-              Dependencies
+              {props.t("Dependencies")}
             </TableCell>
             <TableCell></TableCell>
           </TableRow>
@@ -52,10 +53,10 @@ const SimpleTable = (props) => {
                 <Button
                   variant="contained"
                   color="primary"
-                  label={"EDIT"}
+                  label={props.t("Edit")}
                   onClick={() => props.onClick(modules)}
                 >
-                  EDIT
+                  {props.t("Edit")}
                 </Button>
               </TableCell>
             </TableRow>
@@ -66,7 +67,7 @@ const SimpleTable = (props) => {
   );
 };
 
-export default SimpleTable;
+export default withNamespaces()(SimpleTable);
 
 const useStyles = makeStyles({
   table: {

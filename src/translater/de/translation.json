@@ -1,0 +1,23 @@
+{
+  "EmailAddress": "E-Mail-Adresse",
+  "Password": "Passwort",
+  "SignIn": "Anmelden",
+  "All": "Alle",
+  "Incomplete": "Unvollständig",
+  "Dependencies": "Abhängigkeiten",
+  "StudyProgramme": "Studienprogramm",
+  "Edit": "Bearbeiten",
+  "Logout": "Abmelden",
+  "URLofMD": "URL der Modulbeschreibung",
+  "Change": "Ändern",
+  "Prerequisite": "Vorraussetzung Modul(e)",
+  "Delete": "Löschen",
+  "Add": "Hinzufügen",
+  "Modules": "Module",
+  "DeleteMessage": "erfolgreich gelöscht!",
+  "URLChangeMessage": "erfolgreich aktualisiert!",
+  "ModuleNoPreModule": "Modul hat kein voraussetzungs Modul",
+  "PreModuleAddMessage": "erfolgreich hinzugefügt!",
+  "None": "Keine",
+  "Done": "Fertig"
+}

@@ -4,6 +4,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import { withNamespaces } from "react-i18next";
 
 const Dropdown = (props) => {
   const classes = useStyles();
@@ -20,7 +21,7 @@ const Dropdown = (props) => {
       >
         {props.showAll && (
           <MenuItem value={"All"}>
-            <em>All</em>
+            <em>{props.t("All")}</em>
           </MenuItem>
         )}
         {props.menuItems.map((menuItem) => (
@@ -33,7 +34,7 @@ const Dropdown = (props) => {
   );
 };
 
-export default Dropdown;
+export default withNamespaces()(Dropdown);
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
