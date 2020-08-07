@@ -9,9 +9,7 @@ import "./translater/i18n";
 
 ReactDOM.render(
   <MuiThemeProvider theme={theme}>
-    <Router>
-      <App />
-    </Router>
+    <App />
   </MuiThemeProvider>,
   document.getElementById("root")
 );
