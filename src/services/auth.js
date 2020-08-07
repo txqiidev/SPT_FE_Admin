@@ -9,10 +9,12 @@ const login = async (email, password) => {
     email,
     password,
   });
+  // stores JWT token in the local storage of the browser
   localStorage.setItem(tokenKey, data);
 };
 
 const logout = () => {
+  // deletes JWT token in the local storage of the browser
   localStorage.removeItem(tokenKey);
 };
 

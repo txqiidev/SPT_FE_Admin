@@ -19,10 +19,12 @@ const Home = (props) => {
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
 
+  // fetches the study programmes during the first render of the component
   useEffect(() => {
     calling.getStudyProgramme().then((result) => setStudyProgrammes(result));
   }, []);
 
+  // fetches the modules of a chosen study programme
   useEffect(() => {
     if (!open) {
       calling.getModules(selectedStudyProgramme).then((result) => {

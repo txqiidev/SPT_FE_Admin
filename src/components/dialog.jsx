@@ -31,6 +31,7 @@ const DialogBox = (props) => {
 
   const classes = useStyles();
 
+  // fetches the prerequisites modules
   useEffect(() => {
     if (open) {
       updateModule(dialogModule.idModule);
@@ -45,6 +46,7 @@ const DialogBox = (props) => {
     calling.getModule(id).then((result) => setModule(result));
   };
 
+  // Handler for the checkbox "Module has no prerequisite Module"
   const onChangeHandlerCheck = async () => {
     modification
       .updateHasPrerequisite(module.idModule, !checked ? 2 : 0)
